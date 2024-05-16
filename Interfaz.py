@@ -39,9 +39,8 @@ class Carta(CartaBase):
             return "K"
         else:
             return self.ind % 13 + 1
-    
-    
-    pass
+        
+        
 
 # Clase para representar cada mano (Croupier y jugador)
 class Mano():
@@ -79,7 +78,6 @@ class Mano():
         elif mano.valorMano > 21:
             mano.estadoMano = "Pasada"
         
-    pass
 
 # Clase para almacenar todas las variables necesarias para el programa
 class Variables():
@@ -101,7 +99,7 @@ class Variables():
         
         # Variable para la seleccion de la mano a la hora de realizar la accion
         self.seleccionMano = 0
-    pass
+
 
 
 class DIALOGOAPUESTA(wx.Dialog):
