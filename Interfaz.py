@@ -40,43 +40,103 @@ class Carta(CartaBase):
         else:
             return self.ind % 13 + 1
         
-        
-
 # Clase para representar cada mano (Croupier y jugador)
-class Mano():
-    def __init__(self):
+class Mano:
+    def __init__(self, nombre):
+        self.nombre = nombre
+        self.cartas = []  # Inicializamos el atributo cartas como una lista vacía
+        self.estado = "Activa"
+
+    def agregar_carta(self, carta):
+        self.cartas.append(carta)
         
-        # Variables referidas a las propiedades de cada mano
-        self.cartas = []            # Array que almacena las cartas de la mano
-        self.nomMano = "Mano"       # Variable para el nombre de la mano
-        self.valorMano = 0          # Variable representa el valor total de la mano
-        self.estadoMano = "Activa"  # Variable que representa el estado de la mano
-        self.apuestaMano = 0        # Variablee que almacena el valor de la apuesta para la mano
         
-        # Variables para localizar la mano
-        self.sizerMano = ''         # Posicion de la mano dentro de la ventana
-        self.panelMano = ''         # ""
-        self.sizerCartasMano = ''   # ""
-        self.cartasIMGs = []        # Almacen de las cartas visualizadas en la ventana
-        self.detallesMano = ''      # Datos de la mano (izq)
-        self.seleccionMano = ''     # Boton para seleccionar la mano a la hoar de realizar una accion
+    # Calcula el valor total de la mano
+    def calcular_valor(self):
+        # Inicializamos el valor en 0 antes de calcularlo nuevamente
+        valor = 0
+        num_as = 0  # Contador de ases (que valen 1 u 11)
         
-    # Calcula y establece el valor de la mano pasada como atributo
-    def valorMano(self, mano):
-        mano.valorMano = 0
+        for carta in self.cartas:
+            if (carta.ind % 13 + 1) in [11, 12, 13]:
+                valor += 10
+            elif (carta.ind % 13 + 1) == 1:
+                num_as += 1
+                valor += 11  # Asumimos el valor del as como 11 por defecto
+            else:
+                valor += (carta.ind % 13 + 1)  # Las cartas numéricas tienen su valor numérico
         
-        for carta in mano.cartas:
-            mano.valorMano += carta.valor
+        # Ajustamos el valor de los ases si el total es mayor a 21
+        while num_as > 0 and valor > 21:
+            valor -= 10  # Restamos 10 al valor total por cada as
+            num_as -= 1
+
+        return valor
+        
+    # Traduce el indice de la carta en la baraja a la carta que es (Ej ind = 11 -> Q)
+    def calcula_carta(self):
+        for ind in self.cartas:
+            if ind % 13 + 1 == 1:
+                return "A"
+            elif ind % 13 + 1 == 11:
+                return "J"
+            elif ind % 13 + 1 == 12:
+                return "Q"
+            elif ind % 13 + 1 == 13:
+                return "K"
+            else:
+                return ind % 13 + 1
             
-        for carta in mano.catas:
-            if carta.valor == 1 and mano.valorMano <= 11:
-                mano.valorMano += 10
-    
-    def estadoMano(self, mano):
-        if mano.valorMano <= 21:
-            mano.estadoMano = "Activa"
-        elif mano.valorMano > 21:
-            mano.estadoMano = "Pasada"
+    # Recibe el indice de una carta y calcula el valor de la carta correspondiente al indice
+    def traduce_carta(self, carta, i):
+        carta = self.cartas[i].ind
+        if carta % 13 + 1 == 1:
+            return "A"
+        elif carta % 13 + 1 == 11:
+            return "J"
+        elif carta % 13 + 1 == 12:
+            return "Q"
+        elif carta % 13 + 1 == 13:
+            return "K"
+        else:
+            return carta % 13 + 1
+        
+    # Recibe el indice de una carta y calcula el palo de la carta correspondiente al indice
+    def traduce_palo(self, palo, i):
+        palo = self.cartas[i].ind
+        if palo >= 0 and palo <= 12:
+            return "♠"  # [PICAS]
+        elif palo >= 13 and palo <= 25:
+            return "♣" # [TREVOLES]
+        elif palo >= 26 and palo <= 38:
+            return "♦" # [DIAMANTES]
+        else:
+            return "♥" # [CORAZONES]
+
+    def abrir_mano(self):
+        self.estado = "Activa"
+
+    def cerrar_mano(self):
+        self.estado = "Cerrada"
+        
+    def mano_pasada(self):
+        self.estado = "PASADA"
+        
+# Clase para representar al croupier
+class Croupier():
+    def __init__(self):
+        self.croupier = "Croupier"
+        self.mano = Mano("Croupier")
+        
+# Clase para representar al Jugador con sus manos
+class Jugador(Mano):
+    def __init__(self):
+        self.nombre = "Jugador"
+        self.manos = []     # INTs
+        self.valor_mano = []        # INTs
+        self.apuesta = []       # INTs
+        self.nombre_mano = ["ManoA"]        # STRs
+        self.estado_mano = ["Activa"]       # STRs
         
 
 # Clase para almacenar todas las variables necesarias para el programa
@@ -359,6 +419,19 @@ class manual(wx.Frame):
     def accionSeparar(self, event):  # wxGlade: manual.<event_handler>
         print("Event handler 'accionSeparar' not implemented!")
         event.Skip()
+        
+        
+    # FUNCIONES PARTIDA #
+    def repartoInicial(self):
+        # Variable pra gestionar el control del blackjack
+        compruebaBlackJack = False
+        
+        # Tengo que repartir las cartas al jugador y al croupier
+        
+        
+        
+        
+        pass
 
 # end of class manual
 
